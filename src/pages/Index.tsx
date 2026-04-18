@@ -21,12 +21,7 @@ const NAV_ITEMS: { id: Tab; label: string; icon: string }[] = [
 
 export default function Index() {
   const [tab, setTab] = useState<Tab>("game");
-  const { state, handleClick, buyItem, updateSettings, newAchievement, setNewAchievement } = useGameState();
-
-  const handleMinigameEarn = useCallback((amount: number) => {
-    handleClick();
-    for (let i = 0; i < amount - 1; i++) handleClick();
-  }, [handleClick]);
+  const { state, handleClick, earnCredits, buyItem, updateSettings, newAchievement, setNewAchievement } = useGameState();
 
   useEffect(() => {
     if (newAchievement) {
@@ -60,7 +55,7 @@ export default function Index() {
       <main className="flex-1 overflow-y-auto pb-20 px-4 py-5">
         {tab === "game" && <ClickZone state={state} onClick={handleClick} />}
         {tab === "shop" && <ShopPanel state={state} onBuy={buyItem} />}
-        {tab === "minigames" && <MiniGames onEarn={handleMinigameEarn} />}
+        {tab === "minigames" && <MiniGames onEarn={earnCredits} />}
         {tab === "achievements" && (
           <AchievementsPanel
             achievements={state.achievements}

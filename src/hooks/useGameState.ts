@@ -187,6 +187,17 @@ export function useGameState() {
     });
   }, [clickPower, difficultyMultiplier]);
 
+  const earnCredits = useCallback((amount: number) => {
+    setCredits(prev => prev + amount);
+    setSeason(prev => {
+      const newXp = prev.xp + Math.floor(amount * 0.05) + 1;
+      if (newXp >= prev.xpRequired && prev.level < prev.maxLevel) {
+        return { ...prev, xp: newXp - prev.xpRequired, level: prev.level + 1, xpRequired: Math.floor(prev.xpRequired * 1.5) };
+      }
+      return { ...prev, xp: newXp };
+    });
+  }, []);
+
   const buyItem = useCallback((itemId: string) => {
     setShopItems(prev => {
       const item = prev.find(i => i.id === itemId);
@@ -230,5 +241,5 @@ export function useGameState() {
     return () => clearTimeout(timer);
   }, [credits, totalClicks, shopItems, achievements, settings, season, totalPurchases]);
 
-  return { state, handleClick, buyItem, updateSettings, newAchievement, setNewAchievement };
+  return { state, handleClick, earnCredits, buyItem, updateSettings, newAchievement, setNewAchievement };
 }
