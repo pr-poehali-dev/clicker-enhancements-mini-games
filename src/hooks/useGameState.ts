@@ -87,7 +87,7 @@ function loadState(): Partial<GameState> {
 
 function saveState(state: GameState) {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ ...state, savedAt: Date.now() }));
   } catch (_e) {
     void _e;
   }
@@ -237,8 +237,8 @@ export function useGameState() {
   const state: GameState = { credits, totalClicks, clicksPerSecond, clickPower, passiveIncome, shopItems, achievements, settings, season, totalPurchases };
 
   useEffect(() => {
-    const timer = setTimeout(() => saveState(state), 1000);
-    return () => clearTimeout(timer);
+    const timer = setInterval(() => saveState(state), 5000);
+    return () => clearInterval(timer);
   }, [credits, totalClicks, shopItems, achievements, settings, season, totalPurchases]);
 
   return { state, handleClick, earnCredits, buyItem, updateSettings, newAchievement, setNewAchievement };
